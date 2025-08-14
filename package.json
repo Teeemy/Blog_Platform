@@ -1,0 +1,25 @@
+{
+  "name": "blog_platform",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Mariam Onibon oje",
+  "license": "ISC",
+  "description": "Simple Blog platform created with NodeJs, Express and MongoDb",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
