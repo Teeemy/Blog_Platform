@@ -11,7 +11,14 @@ const CommentSchema = new mongoose.Schema(
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+    },
+    guestName: {
+      type: String,
+      trim: true,
+    },
+    guestEmail: {
+      type: String,
+      trim: true,
     },
     content: { type: String, required: true, maxlength: 1000 },
   },

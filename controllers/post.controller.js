@@ -1,49 +1,95 @@
-
 const Post = require("../models/post.model");
 
-const createBlog = async (req, res) => {
+// Create a post
+const createPost = async (req, res) => {
     try {
-        const blogs = await Post.create({...req.body, userId:req.id})
-        return res.status(200).json(blogs)
+        const newPost = new Post({
+            title: req.body.title,
+            content: req.body.content,
+            categories: req.body.categories,
+            author: req.user.id   // attach logged-in user
+        });
+        await newPost.save();
+        res.status(201).json({ message: "Post created successfully", post: newPost });
     } catch (error) {
-        return res.status(500).json(error.message)
-        
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
-const getSingleBlog = async (req, res) => {
+// Get all posts (public)
+const getAllPosts = async (req, res) => {
     try {
-        const blogs = await Blog.find({})
-        return res.status(200).json(blogs)
+        const posts = await Post.find().populate("author", "username email");
+        res.json(posts);
     } catch (error) {
-        return res.status(500).json(error.message)
-
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
-const getBlogs = async (req, res) => {
-    const { userId } = req.query;
+// Get single post (public)
+const getSinglePost = async (req, res) => {
     try {
-        const blogs = await Blog.findById({userId})
-        return res.status(200).json(blogs)
+        const post = await Post.findById(req.params.id).populate("author", "username email");
+        if (!post) return res.status(404).json({ message: "Post not found" });
+        res.json(post);
     } catch (error) {
-        return res.status(500).json(error.message)
-
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
-const updateBlog = async (req, res) => {
+// Get all posts by a single user
+const getPostsByUser = async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params.id )
-        if (blog.userId !== req.user.id) {
-            return res.send ("you can only update your posts")
+        const userId = req.params.userId; // user ID from route
+        const posts = await Post.find({ author: userId }); // filter by author
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Update post (admin can update any post)
+const updatePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        // Only admin or post author can update
+        if (req.user.role !== "admin" && post.author.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized to update this post" });
         }
-        const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        return res.status(200).json(updatedBlog)
+
+        Object.assign(post, req.body);
+        await post.save();
+        res.status(200).json({ message: "Post updated successfully", post });
     } catch (error) {
-        return res.status(500).json(error.message)
-
+        res.status(500).json({ message: error.message });
     }
-}
+};
+  
+/// Delete post (admin can delete any post)
+const deletePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ message: "Post not found" });
 
-module.exports = {createBlog,getSingleBlog,getBlogs,updateBlog}
+        // Only admin or post author can delete
+        if (req.user.role !== "admin" && post.author.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized to delete this post" });
+        }
+
+        await post.deleteOne();
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+  };
+
+module.exports = {
+    createPost,
+    getAllPosts,
+    getSinglePost,
+    getPostsByUser,
+    updatePost,
+    deletePost,
+};

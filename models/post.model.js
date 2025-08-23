@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
     title: {
       type: String,
       required: true,
@@ -24,7 +20,9 @@ const PostSchema = new mongoose.Schema(
       default: [],
     },
     author: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", 
+      required: true,
     },
   },
   { timestamps: true }
