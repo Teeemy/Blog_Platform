@@ -32,8 +32,7 @@ const register = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // change to true in production with HTTPS
-      sameSite: "strict",
+      secure: false,
       maxAge: 2 * 24 * 60 * 60 * 1000 // 2 days
     });
 
@@ -73,7 +72,7 @@ const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // set true in production with HTTPS
+      secure: false, 
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
     });
 

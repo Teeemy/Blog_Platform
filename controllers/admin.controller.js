@@ -3,7 +3,7 @@ const User = require("../models/user.model");
 // Admin: get a single user by ID
 const getSingleUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select("-password");
+        const user = await User.findById(req.params.id).select("-password"); // remove password from response
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

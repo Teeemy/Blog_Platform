@@ -11,7 +11,7 @@ const {
   deletePost,
   getAllPosts,
   getSinglePost,
-} = require("../controllers/post.controller"); // ✅ import from post controller
+} = require("../controllers/post.controller");
 const { authenticateJWT, isAdmin } = require("../middlewares/auth.middleware");
 
 // User management (admin only)

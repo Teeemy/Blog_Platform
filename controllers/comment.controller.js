@@ -23,7 +23,7 @@ const createComment = async (req, res) => {
 // Get all comments for a post
 const getCommentsByPost = async (req, res) => {
     try {
-        const { postId } = req.query; // get postId from query string
+        const { postId } = req.query; // get postId from query
 
         if (!postId) {
             return res.status(400).json({ message: "postId query parameter is required" });
@@ -53,7 +53,7 @@ const getCommentsByPost = async (req, res) => {
 };
 
   
-// Update a comment (only own comment)
+// Update a comment (only user's own comment)
 const updateComment = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id);
@@ -72,7 +72,7 @@ const updateComment = async (req, res) => {
   }
 };
 
-// Delete a comment (own or admin)
+// Delete a comment (user or admin)
 const deleteComment = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id);

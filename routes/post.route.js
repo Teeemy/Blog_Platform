@@ -16,7 +16,7 @@ router.post("/", authenticateJWT, createPost);
 router.put("/:id", authenticateJWT, updatePost);
 router.delete("/:id", authenticateJWT, deletePost);
 
-// Get posts are public
+// Get posts 
 router.get("/", getAllPosts);
 router.get("/:id", getSinglePost);
 router.get("/user/:userId", getPostsByUser);
