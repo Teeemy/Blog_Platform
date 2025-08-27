@@ -26,14 +26,12 @@ app.get("/", (req, res) => {
     res.send("Welcome to Mariam's Blog Platform");
 });
 
-// Mount routes with proper prefixes
-app.use("/api/auth", authRoutes);   // login, register
-app.use("/api/posts", postRoutes);  // CRUD posts
+// Mount routes
+app.use("/api/auth", authRoutes);   
+app.use("/api/posts", postRoutes);  
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/comments", commentRoutes);
-
-
 
 app.listen(PORT, () => {
     console.log(`App is listening on port ${PORT}`);
