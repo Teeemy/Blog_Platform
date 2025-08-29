@@ -1,8 +1,9 @@
 const express = require("express");
 const {
   createPost,
-  getPosts,
+  getAllPosts,
   getSinglePost,
+  getPostsByUser,
   updatePost,
   deletePost,
 } = require("../controllers/post.controller");
@@ -15,8 +16,10 @@ router.post("/", authenticateJWT, createPost);
 router.put("/:id", authenticateJWT, updatePost);
 router.delete("/:id", authenticateJWT, deletePost);
 
-// Get posts are public
-router.get("/", getPosts);
+// Get posts 
+router.get("/", getAllPosts);
 router.get("/:id", getSinglePost);
+router.get("/user/:userId", getPostsByUser);
+
 
 module.exports = router;

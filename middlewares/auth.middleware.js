@@ -1,21 +1,35 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.model")
 
-const authenticateJWT = async (req, res, next) => {
-    const { token } = req.headers.authorization.split(' ')[1]; // get the token from cookies
+// Authenticate user using JWT from cookie
+const authenticateJWT = (req, res, next) => {
+    try {
+        const token = req.cookies.token; // read JWT from cookie
 
-    if (!token) {
-        return res.status(403).json({ message: "Unauthorized, login to create blog" });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (error, payload) => {
-        if (error) {
-            return res.status(403).json({ message: "JWT Verification Error",});
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized, login required" });
         }
-        // attach user to request
-        req.user = { id: payload.id, admin: payload.admin };
-        next();
-    });
+
+        jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+            if (error) {
+                return res.status(403).json({ message: "Invalid or expired token" });
+            }
+
+            // Attach user info to request
+            req.user = { id: decoded.id, role: decoded.role || "user" };
+            next();
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
 };
 
-module.exports = authenticateJWT;
+
+// Admin check middleware
+const isAdmin = (req, res, next) => {
+    if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({ message: "Admins only" });
+    }
+    next();
+};
+
+module.exports = { authenticateJWT, isAdmin };
