@@ -7,8 +7,8 @@ const createComment = async (req, res) => {
             content: req.body.content,
             post: req.body.post,
             author: req.user ? req.user.id : null, // logged-in user
-            guestName: req.body.guestName || null, // guest name if provided
-            guestEmail: req.body.guestEmail || null, // guest email if provided
+            guestName: req.body.guestName || null, 
+            guestEmail: req.body.guestEmail || null, 
         });
 
         res.status(201).json({

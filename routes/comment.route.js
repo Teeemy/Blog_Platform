@@ -9,10 +9,10 @@ router.post("/", authenticateJWT, createComment);
 // Get all comments for a post
 router.get("/", getCommentsByPost);
 
-// Update own comment
+// Update user's comment
 router.put("/:id", authenticateJWT, updateComment);
 
-// Delete own comment or admin
+// Delete user's comment or admin
 router.delete("/:id", authenticateJWT, deleteComment);
 
 module.exports = router;
